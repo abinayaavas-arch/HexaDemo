@@ -1,0 +1,165 @@
+[
+  {
+    "step": "Read and analyze pom.xml for backend dependencies and setup.",
+    "sub_steps": [
+      "Open /home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/pom.xml.",
+      "Ensure that dependencies such as spring-boot-starter-web, spring-boot-starter-data-jpa, spring-boot-starter-validation, and mysql-connector-java are included.",
+      "Verify that no H2 dependency is present as per requirements.",
+      "Review main application structure in ItAssetManagementSystemApplication.java."
+    ],
+    "files_to_add": [],
+    "files_to_edit": [
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/pom.xml"
+    ],
+    "description": "Ensure backend has all the necessary dependencies and appropriate setup for MySQL and validation to implement the required asset management logic."
+  },
+  {
+    "step": "Implement backend domain model, repository, and enums for Asset.",
+    "sub_steps": [
+      "Create Asset entity class with fields: id, name, type, serialNumber, purchaseDate, assignedTo, status with necessary validation annotations (length, not null, unique for serialNumber).",
+      "Define AssetType and AssetStatus enums to restrict 'type' and 'status' values as required.",
+      "Create AssetRepository interface extending JpaRepository.",
+      "Reference application.properties for MySQL configuration."
+    ],
+    "files_to_add": [
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/src/main/java/com/examly/springapp/model/Asset.java",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/src/main/java/com/examly/springapp/model/AssetType.java",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/src/main/java/com/examly/springapp/model/AssetStatus.java",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/src/main/java/com/examly/springapp/repository/AssetRepository.java"
+    ],
+    "files_to_edit": [],
+    "description": "Establish the core domain structure for asset management, ensuring data integrity and restrictions required for the APIs."
+  },
+  {
+    "step": "Implement Asset service layer for business logic.",
+    "sub_steps": [
+      "Create AssetService class with methods for createAsset, getAllAssets (with filtering), updateAssetStatus.",
+      "Validate all fields and handle errors (validation, duplicate serialNumber, record not found).",
+      "Throw relevant exceptions with precise error messages for test compatibility.",
+      "Ensure purchaseDate is handled as LocalDate.",
+      "Implement unique serial number logic via repository or service layer."
+    ],
+    "files_to_add": [
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/src/main/java/com/examly/springapp/service/AssetService.java"
+    ],
+    "files_to_edit": [],
+    "description": "Contains all business logic, validation, and handles error responses mapped to appropriate status codes for controller use."
+  },
+  {
+    "step": "Implement REST controller for Asset APIs and global exception handling.",
+    "sub_steps": [
+      "Create AssetController with endpoints:",
+      "POST /api/assets \u2013 create new asset (201 Created, handle 400/409).",
+      "GET /api/assets \u2013 get all assets, optionally filtered by type/status.",
+      "PATCH /api/assets/{id}/status \u2013 update asset status and assignedTo (handle 400/404).",
+      "Use proper DTOs if needed for request and response objects.",
+      "Add @RestControllerAdvice class for global exception handling, mapping to status codes and response format.",
+      "Add CORS configuration to allow requests from React frontend (localhost:3000 or * as needed)."
+    ],
+    "files_to_add": [
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/src/main/java/com/examly/springapp/controller/AssetController.java",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/src/main/java/com/examly/springapp/exception/GlobalExceptionHandler.java",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/src/main/java/com/examly/springapp/config/CorsConfig.java"
+    ],
+    "files_to_edit": [],
+    "description": "Expose REST APIs for frontend integration, implement error responses as per test requirements, and ensure CORS policy is set for React app access."
+  },
+  {
+    "step": "Implement and map all backend/JUnit test cases for the API functionality.",
+    "sub_steps": [
+      "Implement testCreateAssetSuccess: Test successful creation of asset, assert status 201, field matching, DB persistence.",
+      "Implement testCreateAssetValidationFailure: Send invalid payloads, assert 400 error and validation error messages are returned.",
+      "Implement testGetAllAssetsWithFiltering: Populate DB with test assets, GET check with/without filters.",
+      "Implement testUpdateAssetStatus: Test PATCH with status updates and assignedTo logic.",
+      "Implement testUpdateAssetStatusNotFound: Test PATCH on missing id, assert 404.",
+      "Use MockMvc, @SpringBootTest, @Transactional for integration tests.",
+      "Mock repositories or use a test container/config if required."
+    ],
+    "files_to_add": [
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/springapp/src/test/java/com/examly/springapp/controller/AssetControllerTest.java"
+    ],
+    "files_to_edit": [],
+    "description": "Create and implement all required backend test cases. Each test matches the provided scenario exactly. Use actual repository/database as needed for data integration."
+  },
+  {
+    "step": "Compile and run backend (Spring Boot) build and tests.",
+    "sub_steps": [
+      "Run 'mvn clean compile -q -Dspring.main.banner-mode=off' to ensure compilation with no errors.",
+      "Run 'mvn test -q -Dspring.main.banner-mode=off' to execute all JUnit tests created above.",
+      "Run 'mvn clean install -q -Dspring.main.banner-mode=off' for build/install."
+    ],
+    "files_to_add": [],
+    "files_to_edit": [],
+    "description": "Validates that all backend code is correct and all provided tests pass, ensuring API correctness before moving to frontend implementation."
+  },
+  {
+    "step": "Read and analyze package.json for React/Frontend dependencies and setup.",
+    "sub_steps": [
+      "Open /home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/package.json.",
+      "Check for dependencies on React, React DOM, react-testing-library or similar.",
+      "Review index.js and App.js for initial setup."
+    ],
+    "files_to_add": [],
+    "files_to_edit": [
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/package.json"
+    ],
+    "description": "Ensure front-end dependency setup allows for required component and test implementation."
+  },
+  {
+    "step": "Implement frontend UI components for asset management, API integration, and styling with CSS variables.",
+    "sub_steps": [
+      "Create components/: AssetList.js (list table, filtering, search, update button), AssetList.test.js.",
+      "Add AddAssetForm.js (form component), AddAssetForm.test.js.",
+      "Create UpdateAssetStatusModal.js (modal for update), UpdateAssetStatusModal.test.js.",
+      "Create utils/constants.js for enums and reusable API constants.",
+      "Implement API integration (fetch/axios) for all endpoints using http://localhost:8080 as base.",
+      "Implement loading indicators, error, and success states.",
+      "Add and use CSS with variables for layout, buttons, tables, .error states, modal, etc.",
+      "Integrate all components into App.js; update navigation, states, and global wrapper.",
+      "Reference App.css and index.css to enforce design variables and utility classes."
+    ],
+    "files_to_add": [
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/src/components/AssetList.js",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/src/components/AddAssetForm.js",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/src/components/UpdateAssetStatusModal.js",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/src/utils/constants.js"
+    ],
+    "files_to_edit": [
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/src/App.js",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/src/App.css",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/src/index.css"
+    ],
+    "description": "Builds all required UI features, response states, and integrates with backend APIs. Implements precise design and styling as outlined in requirements."
+  },
+  {
+    "step": "Implement and map all frontend/Jest test cases for React components.",
+    "sub_steps": [
+      "Create AssetList.test.js with tests: renderAssetListComponent, assetListFilteringAndSearch.",
+      "Create AddAssetForm.test.js with tests: addAssetFormSubmission, addAssetFormValidation.",
+      "Create UpdateAssetStatusModal.test.js with test: updateAssetStatusModal.",
+      "Use React Testing Library with mocks for API calls (global.fetch or axios).",
+      "Set accurate data-testid and match error/success message content exactly to test requirements.",
+      "Test loading, error, and empty states as described.",
+      "NO manual cleanup; RTL handles lifecycle automatically."
+    ],
+    "files_to_add": [
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/src/components/AssetList.test.js",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/src/components/AddAssetForm.test.js",
+      "/home/coder/project/workspace/question_generation_service/solutions/1a024463-b5d0-45a7-b7ec-aa3209a32c82/reactapp/src/components/UpdateAssetStatusModal.test.js"
+    ],
+    "files_to_edit": [],
+    "description": "Maps each test case from provided jest suite to a specific test file/component. Ensures all functional requirements, including validation and UI feedback, are testable and meet expectations."
+  },
+  {
+    "step": "Compile and run frontend (React) build and tests.",
+    "sub_steps": [
+      "Run 'npm install' in reactapp directory.",
+      "Run 'npm run build' to build the frontend.",
+      "Run 'npx eslint src/ --fix' to lint and autofix code issues.",
+      "Run 'npm run test:ci' to execute all frontend Jest tests."
+    ],
+    "files_to_add": [],
+    "files_to_edit": [],
+    "description": "Builds and validates all frontend code and components, ensuring all tests pass and the UI works as required."
+  }
+]
